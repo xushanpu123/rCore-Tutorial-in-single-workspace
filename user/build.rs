@@ -26,6 +26,10 @@ SECTIONS {{
         *(.srodata .srodata.*)
     }}
     . = ALIGN(4K);
+    .got : ALIGN(4K) {{
+        *(.got .got.*)
+    }}
+    . = ALIGN(4K);
     .data : ALIGN(4K) {{
         *(.data .data.*)
         *(.sdata .sdata.*)
@@ -55,6 +59,10 @@ SECTIONS {{
     .rodata : ALIGN(4K) {{
         *(.rodata .rodata.*)
         *(.srodata .srodata.*)
+    }}
+    . = ALIGN(4K);
+    .got : ALIGN(4K) {{
+        *(.got .got.*)
     }}
     . = ALIGN(4K);
     .data : ALIGN(4K) {{

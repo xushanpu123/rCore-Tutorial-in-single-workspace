@@ -23,6 +23,7 @@ impl KernelStack {
 }
 
 /// 进程。
+#[repr(align(64))]
 pub struct Process {
     pub trap_cx: TrapFrame,
     pub task_cx: KContext,
@@ -51,6 +52,7 @@ impl Process {
         };
         // prepare TrapContext in user space
         process.trap_cx[TrapFrameArgs::SEPC] = entry_point;
+        log::debug!("sp: {:#x}", user_sp);
         process.trap_cx[TrapFrameArgs::SP] = user_sp;
         Some(process)
     }

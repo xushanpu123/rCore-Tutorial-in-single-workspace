@@ -43,7 +43,7 @@ static APPS: Lazy<BTreeMap<&'static str, &'static [u8]>> = Lazy::new(|| {
     }
     unsafe {
         linker::AppMeta::locate()
-            .iter()
+            .iter(0)
             .scan(&app_names as *const _ as usize, |addr, data| {
                 let name = CStr::from_ptr(*addr as _).to_str().unwrap();
                 *addr += name.as_bytes().len() + 1;
@@ -248,12 +248,15 @@ mod impls {
         fn read(&self, _caller: Caller, fd: usize, buf: usize, count: usize) -> isize {
             if fd == STDIN {
                 for _ in 0..count {
-                    if let Some(c) = DebugConsole::getchar() {
-                        let c = c as u8;
-                        let mut ptr = buf as *mut u8;
-                        unsafe {
-                            *ptr = c;
-                            ptr = ptr.add(1);
+                    loop {
+                        if let Some(c) = DebugConsole::getchar() {
+                            let c = c as u8;
+                            let mut ptr = buf as *mut u8;
+                            unsafe {
+                                *ptr = c;
+                                ptr = ptr.add(1);
+                            }
+                            break;
                         }
                     }
                 }

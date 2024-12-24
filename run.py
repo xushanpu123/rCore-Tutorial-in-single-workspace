@@ -88,7 +88,6 @@ def buildUser(args):
         step = userConfig['step']
 
     for idx, case in enumerate(userConfig["cases"]):
-        
         print(
             "    %s %s ..." % (colored("Building", "light_green", attrs=["bold"]), case)
         )
@@ -114,6 +113,8 @@ def buildUser(args):
         appElfPath = getTargetPath() + "/" + case
         if chapter <= 3:
             objcopy(appElfPath, appElfPath + ".bin")
+        else:
+            objcopy(appElfPath, appElfPath, False)
 
     appAsmTemplate = Template("""
         .global apps
@@ -133,6 +134,16 @@ def buildUser(args):
         .incbin "{{ targetPath }}/{{ app }}{{ ext }}"
         app_{{ forloop.index0 }}_end:
         {% endfor %}
+
+        {% if chapter == 5 %}      
+        .p2align 3
+        .section .data
+        .global app_names
+    app_names:
+        {% for app in apps %}
+        .string "{{ app }}"
+        {% endfor %}
+        {% endif %}
     """)
     base = 0
     step = 0
@@ -149,7 +160,8 @@ def buildUser(args):
             "step": step,
             "apps": userConfig["cases"],
             "targetPath": getTargetPath(),
-            "ext": ext
+            "ext": ext,
+            "chapter": chapter
         }
     )
     with open(getTargetPath() + "/app.asm", "w+") as fp:
@@ -157,8 +169,10 @@ def buildUser(args):
 
 
 # Convert elf to binary, stripe all.
-def objcopy(elfPath, binPath):
-    command = ["rust-objcopy", elfPath, "--strip-all", "-O", "binary", binPath]
+def objcopy(elfPath, binPath, binary=True):
+    command = ["rust-objcopy", elfPath, "--strip-all", binPath]
+    if binary:
+        command += ["-O", "binary"]
     subprocess.run(command)
 
 
@@ -225,6 +239,9 @@ def qemu(args):
     command += ["-smp", "1", "-m", "1G", "-serial", "mon:stdio"]
     # Add debug arguments to qemu command and record the asm in the file
     command += ["-D", "qemu.log", "-d", "in_asm,int,pcall,cpu_reset,guest_errors"]
+
+    # command += ["-s", "-S"]
+    
     if chapter > 5:
         command += [
             "-drive",

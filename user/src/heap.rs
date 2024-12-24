@@ -1,4 +1,5 @@
 ﻿use alloc::alloc::handle_alloc_error;
+use rcore_console::println;
 use core::{
     alloc::{GlobalAlloc, Layout},
     ptr::NonNull,

@@ -101,7 +101,7 @@ extern "C" fn rust_main() -> ! {
     // println!("{:x},{:x}",scheduling[KContextArgs::KPC],scheduling[KContextArgs::KSP] );
     // let mut unused = KContext::blank();
     // println!("123");
-    // unsafe{context_switch(&mut unused as *mut KContext, &mut scheduling as *mut KContext);}
+    // unsafe{cocntext_switch(&mut unused as *mut KContext, &mut scheduling as *mut KContext);}
     schedule();
     // panic!("trap from scheduling thread");
 }
@@ -125,8 +125,10 @@ pub fn schedule() -> ! {
 }
 
 pub fn task_entry() {
+
+    let mut ctx_mut = unsafe { (&mut PROCESSES[0].trap_cx as *mut TrapFrame).as_mut().unwrap() };
     unsafe {
-        esr = run_user_task(&mut PROCESSES[0].trap_cx);
+        esr = run_user_task(ctx_mut);
     }
     unsafe {
         match esr {
@@ -143,12 +145,14 @@ pub fn task_entry() {
                         },
                         Id::SCHED_YIELD => {
                             ctx[TrapFrameArgs::ARG0] = ret as _;
-                            ctx[TrapFrameArgs::SEPC] += 4;
+                            // ctx[TrapFrameArgs::SEPC] += 4;
+                            ctx.syscall_ok();
                             PROCESSES.rotate_left(1);
                         }
                         _ => {
                             ctx[TrapFrameArgs::ARG0] = ret as _;
-                            ctx[TrapFrameArgs::SEPC] += 4;
+                            // ctx[TrapFrameArgs::SEPC] += 4;
+                            ctx.syscall_ok();
                         }
                     },
                     Ret::Unsupported(_) => {

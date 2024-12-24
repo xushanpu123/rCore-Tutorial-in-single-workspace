@@ -65,7 +65,6 @@ SECTIONS
         . = ALIGN(4K);
         erodata = .;
     }
-
     .data ALIGN(4K): {
         . = ALIGN(4K);
         *(.data.prepage .data.prepage.*)
