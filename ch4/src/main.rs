@@ -16,12 +16,7 @@ use alloc::vec::Vec;
 use impls::Console;
 use kernel_vm::{frame_alloc_page_with_clear, frame_dealloc, init_frame_allocator, MemorySet};
 use polyhal::{
-    common::{get_mem_areas, PageAlloc},
-    instruction::Instruction,
-    kcontext::*,
-    trap::{run_user_task, EscapeReason, TrapType},
-    trapframe::{TrapFrame, TrapFrameArgs},
-    PhysPage,
+    common::{get_mem_areas, PageAlloc}, consts::VIRT_ADDR_START, instruction::Instruction, kcontext::*, trap::{run_user_task, EscapeReason, TrapType}, trapframe::{TrapFrame, TrapFrameArgs}, PhysPage
 };
 use rcore_console::log::{self, info};
 use syscall::{Caller, Scheduling};
@@ -87,7 +82,7 @@ extern "C" fn rust_main() -> ! {
         );
         init_frame_allocator(start, start + size);
     });
-    for (i, elf) in linker::AppMeta::locate().iter().enumerate() {
+    for (i, elf) in linker::AppMeta::locate().iter(0).enumerate() {
         let base = elf.as_ptr() as usize;
         log::info!("detect app[{i}]: {base:#x}..{:#x}", base + elf.len());
         if let Some(process) = Process::new(ElfFile::new(elf).unwrap()) {

@@ -14,6 +14,7 @@ fn main() -> i32 {
     loop {
         let mut now: TimeSpec = TimeSpec::ZERO;
         clock_gettime(ClockId::CLOCK_MONOTONIC, &mut now as *mut _ as _);
+        println!("time {:?} {:?}", now, time);
         if now > time {
             break;
         }

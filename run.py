@@ -83,7 +83,12 @@ def buildUser(args):
     userConfig = casesList[chapterStr]
     print(userConfig)
 
-    for case in userConfig["cases"]:
+    step = 0
+    if "step" in userConfig:
+        step = userConfig['step']
+
+    for idx, case in enumerate(userConfig["cases"]):
+        
         print(
             "    %s %s ..." % (colored("Building", "light_green", attrs=["bold"]), case)
         )
@@ -100,14 +105,15 @@ def buildUser(args):
         env = os.environ
         if "base" in userConfig:
             env["base"] = str(userConfig["base"])
-            env["BASE_ADDRESS"] = str(userConfig["base"])
+            env["BASE_ADDRESS"] = str(userConfig["base"] + (idx*step))
         if args.release:
             command += ["--release"]
         if args.arch == "loongarch64":
             command += ["-Zbuild-std=core,alloc"]
         subprocess.run(command)
         appElfPath = getTargetPath() + "/" + case
-        objcopy(appElfPath, appElfPath + ".bin")
+        if chapter <= 3:
+            objcopy(appElfPath, appElfPath + ".bin")
 
     appAsmTemplate = Template("""
         .global apps
@@ -128,13 +134,22 @@ def buildUser(args):
         app_{{ forloop.index0 }}_end:
         {% endfor %}
     """)
+    base = 0
+    step = 0
+    ext  = ""
+    if chapter <= 3:
+        ext = ".bin"
+    if "base" in userConfig:
+        base = userConfig["base"]
+    if "step" in userConfig:
+        step = userConfig["step"]
     appAsm = appAsmTemplate.render(
         {
-            "base": userConfig["base"],
-            "step": userConfig["step"],
+            "base": base,
+            "step": step,
             "apps": userConfig["cases"],
             "targetPath": getTargetPath(),
-            "ext": '.bin'
+            "ext": ext
         }
     )
     with open(getTargetPath() + "/app.asm", "w+") as fp:
@@ -169,7 +184,8 @@ def build(args):
         command += ["--release"]
     if args.arch == "loongarch64":
         command += ["-Zbuild-std=core,alloc"]
-    subprocess.run(command, env=env)
+    res = subprocess.run(command, env=env)
+    res.check_returncode()
 
 
 # Run Kernel in the qemu

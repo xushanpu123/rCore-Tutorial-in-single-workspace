@@ -9,7 +9,7 @@ cases = [
 ]
 
 [ch3]
-base = 0x0060_0000
+base = 0x0080_0000
 step = 0x0020_0000
 cases = [
   "00hello_world",

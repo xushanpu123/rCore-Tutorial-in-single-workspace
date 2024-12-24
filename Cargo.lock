@@ -387,7 +387,6 @@ dependencies = [
  "buddy_system_allocator",
  "customizable-buddy 0.0.3",
  "log",
- "page-table",
 ]
 
 [[package]]
@@ -501,16 +500,6 @@ version = "0.0.0"
 source = "git+https://github.com/xushanpu123/os-xtask-utils.git#9cbba69ed96374f3455502af08929048ab592e39"
 dependencies = [
  "once_cell",
-]
-
-[[package]]
-name = "page-table"
-version = "0.0.6"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "82a394e6c402fb630dbb6e33a84a342c482a603ae32b2a26d61202bfaba2b2c0"
-dependencies = [
- "cfg-if",
- "static_assertions",
 ]
 
 [[package]]

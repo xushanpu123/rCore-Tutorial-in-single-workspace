@@ -13,14 +13,23 @@ extern crate alloc;
 use frame_allocater::{frame_alloc_persist, frame_dealloc, init_frame_allocator};
 //use heap_allocator::init_heap;
 use impls::{Console, SyscallContext};
-use polyhal::{common::{get_mem_areas, PageAlloc}, consts::VIRT_ADDR_START, instruction::Instruction, pagetable::PAGE_SIZE, trap::{EscapeReason, TrapType}, trapframe::{TrapFrame, TrapFrameArgs}, MappingFlags, MappingSize, PageTableWrapper, PhysPage, VirtPage};
+use polyhal::irq::IRQ;
+use polyhal::time::Time;
+use polyhal::{
+    common::{get_mem_areas, PageAlloc},
+    consts::VIRT_ADDR_START,
+    instruction::Instruction,
+    pagetable::PAGE_SIZE,
+    trap::{EscapeReason, TrapType},
+    trapframe::{TrapFrame, TrapFrameArgs},
+    MappingFlags, MappingSize, PageTableWrapper, PhysPage, VirtPage,
+};
 use rcore_console::log::{self, info};
 use task::TaskControlBlock;
-use polyhal::time::Time;
 pub mod frame_allocater;
 //pub mod heap_allocator;
-mod sync;
 pub mod config;
+mod sync;
 use alloc::vec::Vec;
 use TrapType::*;
 
@@ -44,9 +53,7 @@ core::arch::global_asm!(include_str!(env!("APP_ASM")));
 // 应用程序数量。
 const APP_CAPACITY: usize = 32;
 #[polyhal::arch_interrupt]
-fn kernel_interrupt(ctx: &mut TrapFrame, trap_type: TrapType) {
-
-}
+fn kernel_interrupt(ctx: &mut TrapFrame, trap_type: TrapType) {}
 //The entry point
 #[polyhal::arch_entry]
 extern "C" fn rust_main() -> ! {
@@ -72,15 +79,15 @@ extern "C" fn rust_main() -> ! {
 
     // 任务控制块
     let mut tcbs = Vec::<TaskControlBlock>::new();
-    for _ in 0..APP_CAPACITY{
+    for _ in 0..APP_CAPACITY {
         tcbs.push(TaskControlBlock::zero());
     }
     let mut index_mod = 0;
     // 初始化
     let new_page_table = PageTableWrapper::alloc();
     new_page_table.change();
-    for (i, app) in linker::AppMeta::locate().iter().enumerate() {
-        println!("{:x}",app.as_ptr() as usize - VIRT_ADDR_START);
+    for (i, app) in linker::AppMeta::locate().iter(VIRT_ADDR_START).enumerate() {
+        println!("{:x}", app.as_ptr() as usize - VIRT_ADDR_START);
         let entry = app.as_ptr() as usize - VIRT_ADDR_START;
         for i in 0..0x20 {
             new_page_table.map_page(
@@ -90,15 +97,15 @@ extern "C" fn rust_main() -> ! {
                 MappingSize::Page4KB,
             );
         }
-        println!("stack:{:x}",tcbs[i].stack.as_ptr() as usize);
-        new_page_table.map_page(
-            VirtPage::from_addr(tcbs[i].stack.as_ptr() as usize- VIRT_ADDR_START),
-            PhysPage::from_addr(tcbs[i].stack.as_ptr() as usize- VIRT_ADDR_START),
-            MappingFlags::URWX,
-            MappingSize::Page4KB,
-        );              
-        log::info!("load app{i} to {entry:#x}");
-        tcbs[i].init(entry);
+        tcbs[i].stack.iter().enumerate().for_each(|(p, ft)| {
+            new_page_table.map_page(
+                VirtPage::from_addr(0x1_8000_0000 + i * 0x5000 + p  * 0x1000),
+                ft.ppn,
+                MappingFlags::URWX,
+                MappingSize::Page4KB,
+            );
+        });
+        tcbs[i].init(entry, 0x1_8000_0000 + (i + 1) * 0x5000);
         index_mod += 1;
     }
     println!();
@@ -108,45 +115,43 @@ extern "C" fn rust_main() -> ! {
     while remain > 0 {
         let tcb = &mut tcbs[i];
         if !tcb.finish {
-            loop {
-                let esr =  tcb.execute();
-                let finish = match esr {
-                    EscapeReason::Timer => {
-                        log::trace!("app{i} timeout");
-                        false
-                    }
-                    EscapeReason::SysCall => {
-                        use task::SchedulingEvent as Event;
-                        match tcb.handle_syscall() {
-                            Event::None => continue,
-                            Event::Exit(code) => {
-                                log::info!("app{i} exit with code {code}");
-                                true
-                            }
-                            Event::Yield => {
-                                log::debug!("app{i} yield");
-                                false
-                            }
-                            Event::UnsupportedSyscall(id) => {
-                                log::error!("app{i} call an unsupported syscall {}", id.0);
-                                true
-                            }
+            let esr = tcb.execute();
+            let finish = match esr {
+                EscapeReason::Timer => {
+                    log::trace!("app{i} timeout");
+                    false
+                }
+                EscapeReason::SysCall => {
+                    use task::SchedulingEvent as Event;
+                    match tcb.handle_syscall() {
+                        Event::None => continue,
+                        Event::Exit(code) => {
+                            log::info!("app{i} exit with code {code}");
+                            true
+                        }
+                        Event::Yield => {
+                            log::debug!("app{i} yield");
+                            false
+                        }
+                        Event::UnsupportedSyscall(id) => {
+                            log::error!("app{i} call an unsupported syscall {}", id.0);
+                            true
                         }
                     }
-                    EscapeReason::Exception(e) => {
-                        log::error!("app{i} was killed by {e:?}");
-                        true
-                    }
-                    _ => {
-                        log::error!("app{i} was killed by an unexpected interrupt");
-                        true
-                    }
-                };
-                if finish {
-                    tcb.finish = true;
-                    remain -= 1;
                 }
-                break;
+                EscapeReason::Exception(e) => {
+                    log::error!("app{i} was killed by {e:?}");
+                    true
+                }
+                EscapeReason::NoReason => false,
+                _ => {
+                    log::error!("app{i} was killed by an unexpected interrupt");
+                    true
+                }
+            };
+            if finish {
+                tcb.finish = true;
+                remain -= 1;
             }
         }
         i = (i + 1) % index_mod;
@@ -219,7 +224,7 @@ mod impls {
             match clock_id {
                 ClockId::CLOCK_MONOTONIC => {
                     let time = Time::now().to_usec();
-                    println!("time is {}",time);
+                    println!("time is {}", time);
                     *unsafe { &mut *(tp as *mut TimeSpec) } = TimeSpec {
                         tv_sec: time / 1_000_000,
                         tv_nsec: time % 1_000_000,
