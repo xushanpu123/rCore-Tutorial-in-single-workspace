@@ -3,3 +3,8 @@ xtask = "run --package xtask --release --"
 make = "xtask make"
 asm = "xtask asm"
 qemu = "xtask qemu"
+
+[target.x86_64-unknown-none]
+rustflags = [
+    '-Clink-arg=-no-pie',
+]

@@ -90,7 +90,7 @@ lazy_static! {
         unsafe { UPSafeCell::new(FrameAllocatorImpl::new()) };
 }
 
-pub fn init_frame_allocator(mm_start: usize, mm_end: usize) {
+pub fn init_frame_allocator(mm_start: usize, mut mm_end: usize) {
     extern "C" {
         fn end();
     }
@@ -104,6 +104,7 @@ pub fn init_frame_allocator(mm_start: usize, mm_end: usize) {
             .fill(0);
         }
         let start = ((phys_end + 0xfff) / PAGE_SIZE * PAGE_SIZE) & (!VIRT_ADDR_START);
+        mm_end = (mm_end & (!VIRT_ADDR_START));
         info!("add frame mm: {:#x} - {:#x}", start, mm_end);
         FRAME_ALLOCATOR.exclusive_access().init(
             PhysAddr::new(start).into(),

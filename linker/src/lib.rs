@@ -40,11 +40,11 @@ mod app;
 pub use app::{AppIterator, AppMeta};
 
 /// 链接脚本。
-pub const SCRIPT: &[u8] = b"\
+pub const SCRIPT: &str = "\
 OUTPUT_ARCH(riscv)
 ENTRY(_start)
 
-BASE_ADDRESS = 0xffffffc080200000;
+BASE_ADDRESS = %BASE_ADDRESS%;
 
 SECTIONS
 {
@@ -92,3 +92,16 @@ SECTIONS
     }
 }";
 
+pub fn get_arch_base(arch: &str) -> (&str, &str) {
+    if arch == "x86_64" {
+        ("i386:x86-64", "0xffffff8000200000")
+    } else if arch.contains("riscv64") {
+        ("riscv", "0xffffffc080200000") // OUTPUT_ARCH of both riscv32/riscv64 is "riscv"
+    } else if arch.contains("aarch64") {
+        ("aarch64", "0xffffff8040080000")
+    } else if arch.contains("loongarch64") {
+        ("loongarch64", "0x9000000090000000")
+    } else {
+        core::unreachable!()
+    }
+}

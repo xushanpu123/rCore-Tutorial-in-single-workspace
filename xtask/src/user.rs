@@ -70,7 +70,7 @@ fn build_one(name: impl AsRef<OsStr>, release: bool, base_address: u64) -> PathB
 }
 
 pub fn build_for(ch: u8, release: bool) {
-    let cfg = std::fs::read_to_string(PROJECT.join("user/cases.toml")).unwrap();
+    let cfg = std::fs::read_to_string(PROJECT.join("user/cases-riscv64.toml")).unwrap();
     let mut cases = toml::from_str::<HashMap<String, Cases>>(&cfg)
         .unwrap()
         .remove(&format!("ch{ch}"))

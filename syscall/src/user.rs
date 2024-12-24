@@ -190,6 +190,7 @@ pub fn condvar_wait(condvar_id: usize, mutex_id: usize) -> isize {
 }
 
 /// 这个模块包含调用系统调用的最小封装，用户可以直接使用这些函数调用自定义的系统调用。
+#[cfg(target_arch = "riscv64")]
 pub mod native {
     use crate::SyscallId;
     use core::arch::asm;
@@ -290,6 +291,356 @@ pub mod native {
             in("a3") a3,
             in("a4") a4,
             in("a5") a5,
+        );
+        ret
+    }
+}
+
+
+/// 这个模块包含调用系统调用的最小封装，用户可以直接使用这些函数调用自定义的系统调用。
+#[cfg(target_arch = "aarch64")]
+pub mod native {
+    use crate::SyscallId;
+    use core::arch::asm;
+
+    #[inline(always)]
+    pub unsafe fn syscall0(id: SyscallId) -> isize {
+        let ret: isize;
+        asm!("svc #0",
+            in("x8") id.0,
+            out("x0") ret,
+        );
+        ret
+    }
+
+    #[inline(always)]
+    pub unsafe fn syscall1(id: SyscallId, a0: usize) -> isize {
+        let ret: isize;
+        asm!("svc #0",
+            inlateout("x0") a0 => ret,
+            in("x8") id.0,
+        );
+        ret
+    }
+
+    #[inline(always)]
+    pub unsafe fn syscall2(id: SyscallId, a0: usize, a1: usize) -> isize {
+        let ret: isize;
+        asm!("svc #0",
+            in("x8") id.0,
+            inlateout("x0") a0 => ret,
+            in("x1") a1,
+        );
+        ret
+    }
+
+    #[inline(always)]
+    pub unsafe fn syscall3(id: SyscallId, a0: usize, a1: usize, a2: usize) -> isize {
+        let ret: isize;
+        asm!("svc #0",
+            in("x8") id.0,
+            inlateout("x0") a0 => ret,
+            in("x1") a1,
+            in("x2") a2,
+        );
+        ret
+    }
+
+    #[inline(always)]
+    pub unsafe fn syscall4(id: SyscallId, a0: usize, a1: usize, a2: usize, a3: usize) -> isize {
+        let ret: isize;
+        asm!("svc #0",
+            in("x8") id.0,
+            inlateout("x0") a0 => ret,
+            in("x1") a1,
+            in("x2") a2,
+            in("x3") a3,
+        );
+        ret
+    }
+
+    #[inline(always)]
+    pub unsafe fn syscall5(
+        id: SyscallId,
+        a0: usize,
+        a1: usize,
+        a2: usize,
+        a3: usize,
+        a4: usize,
+    ) -> isize {
+        let ret: isize;
+        asm!("svc #0",
+            in("x8") id.0,
+            inlateout("x0") a0 => ret,
+            in("x1") a1,
+            in("x2") a2,
+            in("x3") a3,
+            in("x4") a4,
+        );
+        ret
+    }
+
+    #[inline(always)]
+    pub unsafe fn syscall6(
+        id: SyscallId,
+        a0: usize,
+        a1: usize,
+        a2: usize,
+        a3: usize,
+        a4: usize,
+        a5: usize,
+    ) -> isize {
+        let ret: isize;
+        asm!("svc #0",
+            in("x8") id.0,
+            inlateout("x0") a0 => ret,
+            in("x1") a1,
+            in("x2") a2,
+            in("x3") a3,
+            in("x4") a4,
+            in("x5") a5,
+        );
+        ret
+    }
+}
+
+/// 这个模块包含调用系统调用的最小封装，用户可以直接使用这些函数调用自定义的系统调用。
+#[cfg(target_arch = "loongarch64")]
+pub mod native {
+    use crate::SyscallId;
+    use core::arch::asm;
+
+    #[inline(always)]
+    pub unsafe fn syscall0(id: SyscallId) -> isize {
+        let ret: isize;
+        asm!("syscall 0",
+            in("$r11") id.0,
+            out("$r4") ret,
+        );
+        ret
+    }
+
+    #[inline(always)]
+    pub unsafe fn syscall1(id: SyscallId, a0: usize) -> isize {
+        let ret: isize;
+        asm!("syscall 0",
+            inlateout("$r4") a0 => ret,
+            in("$r11") id.0,
+        );
+        ret
+    }
+
+    #[inline(always)]
+    pub unsafe fn syscall2(id: SyscallId, a0: usize, a1: usize) -> isize {
+        let ret: isize;
+        asm!("syscall 0",
+            in("$r11") id.0,
+            inlateout("$r4") a0 => ret,
+            in("$r5") a1,
+        );
+        ret
+    }
+
+    #[inline(always)]
+    pub unsafe fn syscall3(id: SyscallId, a0: usize, a1: usize, a2: usize) -> isize {
+        let ret: isize;
+        asm!("syscall 0",
+            in("$r11") id.0,
+            inlateout("$r4") a0 => ret,
+            in("$r5") a1,
+            in("$r6") a2,
+        );
+        ret
+    }
+
+    #[inline(always)]
+    pub unsafe fn syscall4(id: SyscallId, a0: usize, a1: usize, a2: usize, a3: usize) -> isize {
+        let ret: isize;
+        asm!("syscall 0",
+            in("$r11") id.0,
+            inlateout("$r4") a0 => ret,
+            in("$r5") a1,
+            in("$r6") a2,
+            in("$r7") a3,
+        );
+        ret
+    }
+
+    #[inline(always)]
+    pub unsafe fn syscall5(
+        id: SyscallId,
+        a0: usize,
+        a1: usize,
+        a2: usize,
+        a3: usize,
+        a4: usize,
+    ) -> isize {
+        let ret: isize;
+        asm!("syscall 0",
+            in("$r11") id.0,
+            inlateout("$r4") a0 => ret,
+            in("$r5") a1,
+            in("$r6") a2,
+            in("$r7") a3,
+            in("$r8") a4,
+        );
+        ret
+    }
+
+    #[inline(always)]
+    pub unsafe fn syscall6(
+        id: SyscallId,
+        a0: usize,
+        a1: usize,
+        a2: usize,
+        a3: usize,
+        a4: usize,
+        a5: usize,
+    ) -> isize {
+        let ret: isize;
+        asm!("syscall 0",
+            in("$r11") id.0,
+            inlateout("$r4") a0 => ret,
+            in("$r5") a1,
+            in("$r6") a2,
+            in("$r7") a3,
+            in("$r8") a4,
+            in("$r9") a5,
+        );
+        ret
+    }
+}
+
+
+/// 这个模块包含调用系统调用的最小封装，用户可以直接使用这些函数调用自定义的系统调用。
+#[cfg(target_arch = "x86_64")]
+pub mod native {
+    use crate::SyscallId;
+    use core::arch::asm;
+
+    #[inline(always)]
+    pub unsafe fn syscall0(id: SyscallId) -> isize {
+        let ret: isize;
+        asm!("  push r11
+                push rcx
+                syscall
+                pop  rcx
+                pop  r11",
+                inlateout("rax") id.0 => ret,
+        );
+        ret
+    }
+
+    #[inline(always)]
+    pub unsafe fn syscall1(id: SyscallId, a0: usize) -> isize {
+        let ret: isize;
+        asm!("  push r11
+                push rcx
+                syscall
+                pop  rcx
+                pop  r11",
+            inlateout("rax") id.0 => ret,
+            in("rdi") a0,
+        );
+        ret
+    }
+
+    #[inline(always)]
+    pub unsafe fn syscall2(id: SyscallId, a0: usize, a1: usize) -> isize {
+        let ret: isize;
+        asm!("  push r11
+                push rcx
+                syscall
+                pop  rcx
+                pop  r11",
+            inlateout("rax") id.0 => ret,
+            in("rdi") a0,
+            in("rsi") a1,
+        );
+        ret
+    }
+
+    #[inline(always)]
+    pub unsafe fn syscall3(id: SyscallId, a0: usize, a1: usize, a2: usize) -> isize {
+        let ret: isize;
+        asm!("  push r11
+                push rcx
+                syscall
+                pop  rcx
+                pop  r11",
+            inlateout("rax") id.0 => ret,
+            in("rdi") a0,
+            in("rsi") a1,
+            in("rdx") a2,
+        );
+        ret
+    }
+
+    #[inline(always)]
+    pub unsafe fn syscall4(id: SyscallId, a0: usize, a1: usize, a2: usize, a3: usize) -> isize {
+        let ret: isize;
+        asm!("  push r11
+                push rcx
+                syscall
+                pop  rcx
+                pop  r11",
+            inlateout("rax") id.0 => ret,
+            in("rdi") a0,
+            in("rsi") a1,
+            in("rdx") a2,
+            in("r10") a3,
+        );
+        ret
+    }
+
+    #[inline(always)]
+    pub unsafe fn syscall5(
+        id: SyscallId,
+        a0: usize,
+        a1: usize,
+        a2: usize,
+        a3: usize,
+        a4: usize,
+    ) -> isize {
+        let ret: isize;
+        asm!("  push r11
+                push rcx
+                syscall
+                pop  rcx
+                pop  r11",
+            inlateout("rax") id.0 => ret,
+            in("rdi") a0,
+            in("rsi") a1,
+            in("rdx") a2,
+            in("r10") a3,
+            in("r8")  a4
+        );
+        ret
+    }
+
+    #[inline(always)]
+    pub unsafe fn syscall6(
+        id: SyscallId,
+        a0: usize,
+        a1: usize,
+        a2: usize,
+        a3: usize,
+        a4: usize,
+        a5: usize,
+    ) -> isize {
+        let ret: isize;
+        asm!("  push r11
+                push rcx
+                syscall
+                pop  rcx
+                pop  r11",
+            inlateout("rax") id.0 => ret,
+            in("rdi") a0,
+            in("rsi") a1,
+            in("rdx") a2,
+            in("r10") a3,
+            in("r8") a4,
+            in("r9") a5,
         );
         ret
     }

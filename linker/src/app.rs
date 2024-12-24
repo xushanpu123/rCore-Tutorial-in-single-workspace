@@ -3,10 +3,10 @@
 /// 应用程序元数据。
 #[repr(C)]
 pub struct AppMeta {
-    base: u64,
-    step: u64,
-    count: u64,
-    first: u64,
+    pub base: u64,
+    pub step: u64,
+    pub count: u64,
+    pub first: u64,
 }
 
 impl AppMeta {
@@ -21,14 +21,15 @@ impl AppMeta {
 
     /// 遍历链接进来的应用程序。
     #[inline]
-    pub fn iter(&'static self) -> AppIterator {
-        AppIterator { meta: self, i: 0 }
+    pub fn iter(&'static self, offset: usize) -> AppIterator {
+        AppIterator { meta: self, offset, i: 0 }
     }
 }
 
 /// 应用程序迭代器。
 pub struct AppIterator {
     meta: &'static AppMeta,
+    offset: usize,
     i: u64,
 }
 
@@ -48,7 +49,7 @@ impl Iterator for AppIterator {
                 );
                 let pos = slice[i];
                 let size = slice[i + 1] - pos;
-                let base = self.meta.base as usize + i * self.meta.step as usize;
+                let base = self.offset + self.meta.base as usize + i * self.meta.step as usize;
                 if base != 0 {
                     core::ptr::copy_nonoverlapping::<u8>(pos as _, base as _, size);
                     core::slice::from_raw_parts_mut(base as *mut u8, 0x20_0000)[size..].fill(0);

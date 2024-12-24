@@ -7,6 +7,8 @@
 #[macro_use]
 extern crate rcore_console;
 extern crate alloc;
+use core::fmt::Debug;
+
 use buddy_system_allocator::LockedHeap;
 use frame_allocater::{frame_alloc_persist, frame_dealloc, init_frame_allocator};
 use heap_allocator::init_heap;
@@ -50,13 +52,13 @@ impl PageAlloc for PageAllocImpl {
 // 用户程序内联进来。
 core::arch::global_asm!(include_str!(env!("APP_ASM")));
 
-static mut Exit:bool = false;
+static mut Exit: bool = false;
 #[polyhal::arch_interrupt]
 fn kernel_interrupt(ctx: &mut TrapFrame, trap_type: TrapType) {
     // log::info!("trap_type @ {:x?} {:#x?}", trap_type, ctx);
 
     match trap_type {
-        Timer | SysCall => {},
+        Timer | SysCall => {}
         StorePageFault(_paddr) | LoadPageFault(_paddr) | InstructionPageFault(_paddr) => {
             println!(
                 "[kernel] PageFault in application, kernel killed it. paddr={:x}",
@@ -65,16 +67,14 @@ fn kernel_interrupt(ctx: &mut TrapFrame, trap_type: TrapType) {
             unsafe {
                 Exit = true;
             }
-    }
-    IllegalInstruction(_) => {
-        unsafe {
+        }
+        IllegalInstruction(_) => unsafe {
             Exit = true;
+        },
+        _ => {
+            panic!("{:?}", trap_type);
         }
     }
-       _=>{
-        panic!("{:?}",trap_type);
-       }
-}
 }
 //The entry point
 #[polyhal::arch_entry]
@@ -96,15 +96,17 @@ extern "C" fn rust_main() -> ! {
     // 初始化 syscall
     syscall::init_io(&SyscallContext);
     syscall::init_process(&SyscallContext);
-
-    for (i, app) in linker::AppMeta::locate().iter().enumerate() {
+    
+    for (i, app) in linker::AppMeta::locate().iter(VIRT_ADDR_START).enumerate() {
         let new_page_table = PageTableWrapper::alloc();
         new_page_table.change();
-        let app_base = app.as_ptr() as usize - VIRT_ADDR_START;
+        let app_base = app.as_ptr() as usize & (!VIRT_ADDR_START);
+
         for i in 0..0x20 {
             new_page_table.map_page(
                 VirtPage::from_addr(app_base + PAGE_SIZE * i),
-                PhysPage::from_addr(app_base + PAGE_SIZE * i),
+                PhysPage::from_addr(
+                    app_base + PAGE_SIZE * i),
                 MappingFlags::URWX,
                 MappingSize::Page4KB,
             );
@@ -138,23 +140,22 @@ extern "C" fn rust_main() -> ! {
                         Exit(code) => {
                             log::info!("app{i} exit with code {code}");
                             break;
-                        },
+                        }
                         Error(id) => {
                             log::error!("app{i} call an unsupported syscall {}", id.0);
                             break;
-                        },
+                        }
                     }
                 }
-                _ => {},
+                _ => {}
             }
             unsafe {
-            if(Exit == true){
+                if (Exit == true) {
                     Exit = false;
-                break;
+                    break;
+                }
             }
         }
-        }
-        
         boot_page_table().change();
     }
     Instruction::shutdown();

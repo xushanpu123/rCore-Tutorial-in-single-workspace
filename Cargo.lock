@@ -498,7 +498,7 @@ checksum = "1261fe7e33c73b354eab43b1273a57c8f967d0391e80353e51f764ac02cf6775"
 [[package]]
 name = "os-xtask-utils"
 version = "0.0.0"
-source = "git+https://github.com/xushanpu123/os-xtask-utils.git#b5fafb50c2fb850f82f84dce95b605b27fed5ef0"
+source = "git+https://github.com/xushanpu123/os-xtask-utils.git#9cbba69ed96374f3455502af08929048ab592e39"
 dependencies = [
  "once_cell",
 ]
@@ -522,7 +522,6 @@ checksum = "57c0d7b74b563b49d38dae00a0c37d4d6de9b432382b2892f0574ddcae73fd0a"
 [[package]]
 name = "polyhal"
 version = "0.1.3"
-source = "git+https://github.com/xushanpu123/polyhal.git#33bedf0d11097caec9d994b92fe0e11247fa4303"
 dependencies = [
  "aarch64-cpu",
  "arm_gicv2",
@@ -738,9 +737,9 @@ checksum = "7da8b5736845d9f2fcb837ea5d9e2628564b3b043a70948a3f0b778838c5fb4f"
 
 [[package]]
 name = "syn"
-version = "2.0.90"
+version = "2.0.91"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "919d3b74a5dd0ccd15aeb8f93e7006bd9e14c295087c9896a110f490752bcf31"
+checksum = "d53cbcb5a243bd33b7858b1d7f4aca2153490815872d86d955d6ea29f743c035"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -962,12 +961,12 @@ dependencies = [
 
 [[package]]
 name = "x86_64"
-version = "0.14.13"
+version = "0.14.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c101112411baafbb4bf8d33e4c4a80ab5b02d74d2612331c61e8192fc9710491"
+checksum = "100555a863c0092238c2e0e814c1096c1e5cf066a309c696a87e907b5f8c5d69"
 dependencies = [
  "bit_field",
- "bitflags 2.6.0",
+ "bitflags 1.3.2",
  "rustversion",
  "volatile 0.4.6",
 ]

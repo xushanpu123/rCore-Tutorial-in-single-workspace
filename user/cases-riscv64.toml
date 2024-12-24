@@ -1,0 +1,127 @@
+﻿
+[ch2]
+base = 0x8040_0000
+step = 0
+cases = [
+  "00hello_world",
+  "01store_fault",
+  "02power",
+  "03priv_inst",
+  "04priv_csr",
+]
+
+[ch3]
+base = 0x8040_0000
+step = 0x0020_0000
+cases = [
+  "00hello_world",
+  "01store_fault",
+  "02power",
+  "03priv_inst",
+  "04priv_csr",
+  "05write_a",
+  "06write_b",
+  "07write_c",
+  "08power_3",
+  "09power_5",
+  "10power_7",
+  "11sleep",
+]
+
+[ch4]
+cases = [
+  "00hello_world",
+  "01store_fault",
+  "02power",
+  "03priv_inst",
+  "04priv_csr",
+  "05write_a",
+  "06write_b",
+  "07write_c",
+  "08power_3",
+  "09power_5",
+  "10power_7",
+  "11sleep",
+]
+
+[ch5]
+cases = [
+  "00hello_world",
+  "01store_fault",
+  "02power",
+  "03priv_inst",
+  "04priv_csr",
+  "12forktest",
+  "13forktree",
+  "14forktest2",
+  "15matrix",
+  "user_shell",
+  "initproc",
+]
+
+[ch6]
+cases = [
+  "00hello_world",
+  "01store_fault",
+  "02power",
+  "03priv_inst",
+  "04priv_csr",
+  "12forktest",
+  "13forktree",
+  "14forktest2",
+  "15matrix",
+  "user_shell",
+  "initproc",
+  "filetest_simple",
+  "cat_filea",
+]
+
+[ch7]
+cases = [
+  "00hello_world",
+  "01store_fault",
+  "02power",
+  "03priv_inst",
+  "04priv_csr",
+  "12forktest",
+  "13forktree",
+  "14forktest2",
+  "15matrix",
+  "user_shell",
+  "initproc",
+  "filetest_simple",
+  "cat_filea",
+  "sig_simple",
+  "sig_simple2",
+  "sig_ctrlc",
+  "sig_tests",
+  "usertests",
+]
+
+[ch8]
+cases = [
+  "00hello_world",
+  "01store_fault",
+  "02power",
+  "03priv_inst",
+  "04priv_csr",
+  "12forktest",
+  "13forktree",
+  "14forktest2",
+  "15matrix",
+  "user_shell",
+  "initproc",
+  "filetest_simple",
+  "cat_filea",
+  "sig_simple",
+  "sig_simple2",
+  "sig_ctrlc",
+  "sig_tests",
+  "usertests",
+  "threads",
+  "threads_arg",
+  "mpsc_sem",
+  "sync_sem",
+  "race_adder_mutex_blocking",
+  "test_condvar",
+]
