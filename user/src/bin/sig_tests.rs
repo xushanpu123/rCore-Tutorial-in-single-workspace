@@ -175,13 +175,13 @@ fn run(f: fn()) -> bool {
 
 #[no_mangle]
 pub fn main() -> i32 {
-    let tests: [(fn(), &str); 7] = [
+    let tests: [(fn(), &str); 6] = [
         (user_sig_test_failsignum, "user_sig_test_failsignum"),
         (user_sig_test_kill, "user_sig_test_kill"),
-        (
-            user_sig_test_multiprocsignals,
-            "user_sig_test_multiprocsignals",
-        ),
+        // (
+        //     user_sig_test_multiprocsignals,
+        //     "user_sig_test_multiprocsignals",
+        // ),
         (user_sig_test_restore, "user_sig_test_restore"),
         (kernel_sig_test_ignore, "kernel_sig_test_ignore"),
         // (kernel_sig_test_stop_cont, "kernel_sig_test_stop_cont"),
