@@ -25,6 +25,7 @@ jobs:
           args: --package syscall
       - name: usertests
         run: |
+         cp user/src/bin/usertest.rs user/src/bin/initproc.rs
          rustup component add llvm-tools-preview
          export PATH="$HOME/.rustup/toolchains/$(rustup show active-toolchain)/bin:$PATH"
          cargo install cargo-binutils --version 0.3.0

@@ -99,7 +99,7 @@ extern "C" fn rust_main() -> ! {
     syscall::init_signal(&SyscallContext);
     syscall::init_thread(&SyscallContext);
     syscall::init_sync_mutex(&SyscallContext);
-    let initproc = read_all(FS.open("usertests", OpenFlags::RDONLY).unwrap());
+    let initproc = read_all(FS.open("initproc", OpenFlags::RDONLY).unwrap());
     if let Some((process, thread)) = Process::from_elf(ElfFile::new(initproc.as_slice()).unwrap()) {
         unsafe {
             PROCESSOR.set_proc_manager(ProcManager::new());
