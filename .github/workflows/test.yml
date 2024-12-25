@@ -20,7 +20,7 @@ jobs:
 
       - name: Build syscall
         uses: actions-rs/cargo@v1
-        with:info: installing component 'clippy'
+        with:
           command: build
           args: --package syscall
       - name: usertests
