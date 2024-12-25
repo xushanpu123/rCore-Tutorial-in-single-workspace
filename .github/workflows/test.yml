@@ -1,15 +1,14 @@
-﻿name: CI
+﻿﻿name: CI
 
-on: [push]
-
-env:
-  CARGO_TERM_COLOR: always
-  rust_toolchain: nightly-2023-12-01
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
-
   make:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
@@ -19,11 +18,12 @@ jobs:
           command: build
           args: --package syscall
 
-      - name: cargo_env
-        uses: actions-rs/install@v0.1
+      - name: Check format
+        uses: actions-rs/cargo@v1
         with:
-          crate: cargo-binutils
-          version: latest
+          command: fmt
+          args: --all --check
+   
 
       - name: usertests
         run: |
