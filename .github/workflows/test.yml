@@ -23,6 +23,7 @@ jobs:
 
       - name: usertests
         run: |
+         rustup component add llvm-tools-preview
          pip install toml
          pip install python-liquid
          pip install termcolor
