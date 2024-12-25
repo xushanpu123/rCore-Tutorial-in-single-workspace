@@ -18,7 +18,8 @@ jobs:
         with:
           command: build
           args: --package syscall
-
+          
+     - name: cargo_env
         uses: actions-rs/install@v0.1
         with:
           crate: cargo-binutils
