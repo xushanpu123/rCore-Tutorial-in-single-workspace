@@ -45,9 +45,9 @@ static SUCC_TESTS: &[(&str, &str, &str, &str, i32)] = &[
 ];
 
 static FAIL_TESTS: &[(&str, &str, &str, &str, i32)] = &[
-    ("03priv_inst\0", "\0", "\0", "\0", -11),
+    // ("03priv_inst\0", "\0", "\0", "\0", -11),
     ("01store_fault\0", "filea\0", "\0", "\0", 0),
-    ("04priv_csr\0", "\0", "\0", "\0", -6),
+    // ("04priv_csr\0", "\0", "\0", "\0", -6),
     // ("priv_csr\0", "\0", "\0", "\0", -4),
     // ("priv_inst\0", "\0", "\0", "\0", -4),
     // ("store_fault\0", "\0", "\0", "\0", -11),

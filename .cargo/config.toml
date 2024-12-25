@@ -3,6 +3,7 @@ xtask = "run --package xtask --release --"
 make = "xtask make"
 asm = "xtask asm"
 qemu = "xtask qemu"
+pack = "xtask pack"
 
 [target.x86_64-unknown-none]
 rustflags = [

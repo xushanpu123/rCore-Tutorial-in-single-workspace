@@ -23,6 +23,9 @@ jobs:
 
       - name: usertests
         run: 
-          cargo qemu --ch 8  --release
+         ./run.py --ch 8 --arch riscv64 --release  qemu
+         ./run.py --ch 8 --arch aarch64 --release  qemu
+         ./run.py --ch 8 --arch x86_64 --release  qemu
+         ./run.py --ch 8 --arch loongarch64 --release  qemu   
 
       

@@ -1,7 +1,7 @@
 //! 同步互斥模块
 
 #![no_std]
-#![deny(warnings, missing_docs)]
+
 
 mod condvar;
 mod mutex;

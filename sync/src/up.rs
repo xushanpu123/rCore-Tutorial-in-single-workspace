@@ -1,6 +1,6 @@
 use core::cell::{RefCell, RefMut, UnsafeCell};
 use core::ops::{Deref, DerefMut};
-use riscv::register::sstatus;
+use polyhal::irq::IRQ;
 use spin::Lazy;
 
 /*
@@ -69,10 +69,12 @@ impl IntrMaskingInfo {
     }
 
     pub fn enter(&mut self) {
-        let sie = sstatus::read().sie();
-        unsafe {
-            sstatus::clear_sie();
-        }
+        // let sie = sstatus::read().sie();
+        // unsafe {
+        //     sstatus::clear_sie();
+        // }
+        let sie = IRQ::int_enabled();     
+        IRQ::int_disable();   
         if self.nested_level == 0 {
             self.sie_before_masking = sie;
         }
@@ -83,7 +85,8 @@ impl IntrMaskingInfo {
         self.nested_level -= 1;
         if self.nested_level == 0 && self.sie_before_masking {
             unsafe {
-                sstatus::set_sie();
+                // sstatus::set_sie();
+                IRQ::int_enabled();
             }
         }
     }

@@ -7,6 +7,6 @@ authors = ["zflcs <zhaofangliang@foxmail.com>"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-riscv = "0.10.1"
+polyhal = {git = "https://github.com/xushanpu123/polyhal.git",features = ["kcontext", "trap", "boot"]}
 spin = "0.9"
 rcore-task-manage = { path = "../task-manage", features = ["thread"] }
