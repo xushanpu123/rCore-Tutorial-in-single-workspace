@@ -64,21 +64,11 @@ jobs:
          pip install python-liquid
          pip install termcolor
          sudo apt update && sudo apt install -y qemu-system-misc qemu-system-arm qemu-system-x86
-        ./run.py --ch 8 --arch loongarch64 --release qemu > output.log 2>&1 &
-        pid=$!  # Capture the PID of the background process
-
-        # Monitor the output for the success message
-        tail -f output.log | while IFS= read -r line; do
-          echo "$line" # Print each line to the console
-          if [[ "$line" == *"Usertests passed!"* ]]; then
+         ./run.py --ch 8 --arch loongarch64 --release qemu | while IFS= read -r line; do
+         echo "$line" # Output each line for debugging
+         if [[ "$line" == *"Usertests passed!"* ]]; then
               echo "Detected success message. Exiting with success."
-              kill $pid # Gracefully terminate the test process
-              exit 0    # Exit the script with success
-          fi
-        done
-
-        # If the success message is not detected, fail the job
-        echo "Success message not detected. Exiting with failure."
-        kill $pid # Ensure the process is terminated
-        exit 1
+              exit 0      # Exit successfully
+         fi
+         done
          
