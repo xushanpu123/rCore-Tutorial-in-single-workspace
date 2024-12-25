@@ -20,10 +20,10 @@ jobs:
           args: --package syscall
 
 
-
       - name: usertests
         run: |
          rustup component add llvm-tools-preview
+         export PATH="$HOME/.rustup/toolchains/$(rustup show active-toolchain)/bin:$PATH"
          pip install toml
          pip install python-liquid
          pip install termcolor
