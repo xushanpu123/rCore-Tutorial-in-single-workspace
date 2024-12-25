@@ -3,6 +3,7 @@ use kernel_vm::MemorySet;
 use polyhal::kcontext::{read_current_tp, KContextArgs};
 use polyhal::trapframe::TrapFrameArgs;
 use polyhal::{kcontext::KContext, trapframe::TrapFrame};
+use rcore_console::log;
 use core::{alloc::Layout, mem::size_of};
 use core::str::FromStr;
 use rcore_task_manage::ProcId;
@@ -88,6 +89,7 @@ impl Process {
         };
         // prepare TrapContext in user space
         process.trap_cx[TrapFrameArgs::SEPC] = entry_point;
+        log::debug!("user stack pointer: {:#x?}", user_sp);
         process.trap_cx[TrapFrameArgs::SP] = user_sp;
         Some(process)
     }

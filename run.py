@@ -113,8 +113,8 @@ def buildUser(args):
         appElfPath = getTargetPath() + "/" + case
         if chapter <= 3:
             objcopy(appElfPath, appElfPath + ".bin")
-        else:
-            objcopy(appElfPath, appElfPath, False)
+        # else:
+        #     objcopy(appElfPath, appElfPath, False)
 
     appAsmTemplate = Template("""
         .global apps

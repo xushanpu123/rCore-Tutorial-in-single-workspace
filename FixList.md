@@ -10,6 +10,11 @@ From Date: 2024-12-23
     x86_64 stack map error
     x86_64 .got section not aligned with 1000, so not loaded correctly.
     DebugConsole::getchar() not block when not receiving a data
+
+    User Heap Allocator's Memory was not force aligned.
+    So fixed after align manually.
+
+    Return ops is ctx[TrapFrameArgs::ARG0], correct is ctx[TrapFrameArgs::RET] 
 2. support Multi Architecture
 
 3. Support SMP(Symmetric Multi Processing)

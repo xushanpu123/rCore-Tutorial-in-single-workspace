@@ -311,12 +311,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "eace6325758817ca21d4f27c2ec7d307bcac92f468ef5e0eaa2573787402a62e"
 
 [[package]]
-name = "customizable-buddy"
-version = "0.0.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6f6c584413bb642e0f8c33faa63d7bd285335eb01b4db80be4119926ddcb96be"
-
-[[package]]
 name = "easy-fs"
 version = "0.1.0"
 dependencies = [
@@ -385,7 +379,6 @@ name = "kernel-alloc"
 version = "0.1.0"
 dependencies = [
  "buddy_system_allocator",
- "customizable-buddy 0.0.3",
  "log",
 ]
 
@@ -803,7 +796,7 @@ checksum = "adb9e6ca4f869e1180728b7950e35922a7fc6397f7b641499e8f3ef06e50dc83"
 name = "user_lib"
 version = "0.0.1"
 dependencies = [
- "customizable-buddy 0.0.2",
+ "customizable-buddy",
  "rcore-console",
  "syscall",
 ]

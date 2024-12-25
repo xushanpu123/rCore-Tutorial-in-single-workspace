@@ -161,7 +161,8 @@ pub fn task_entry() {
                 EscapeReason::SysCall => {
                     use syscall::{SyscallId as Id, SyscallResult as Ret};
                     let ctx = &mut PROCESSOR.get_current().unwrap().trap_cx;
-                    ctx[TrapFrameArgs::SEPC] += 4;
+                    // ctx[TrapFrameArgs::SEPC] += 4;
+                    ctx.syscall_ok();
                     // ctx.move_next();
                     let id: Id = ctx[TrapFrameArgs::SYSCALL].into();
                     let args = ctx.args();
@@ -170,7 +171,7 @@ pub fn task_entry() {
                             Id::EXIT => unsafe { PROCESSOR.make_current_exited(ret) },
                             _ => {
                                 let ctx = &mut PROCESSOR.get_current().unwrap().trap_cx;
-                                ctx[TrapFrameArgs::ARG0] = ret as _;
+                                ctx[TrapFrameArgs::RET] = ret as _;
                                 unsafe { PROCESSOR.make_current_suspend() };
                             }
                         },
@@ -279,7 +280,7 @@ mod impls {
             let mut child_proc = current.fork().unwrap();
             let pid = child_proc.pid;
             let context = &mut child_proc.trap_cx;
-            context[TrapFrameArgs::ARG0] = 0 as _;
+            context[TrapFrameArgs::RET] = 0 as _;
             unsafe {
                 PROCESSOR.add(pid, child_proc, current.pid);
             }

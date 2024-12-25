@@ -10,13 +10,16 @@ use customizable_buddy::{BuddyAllocator, LinkedListBuddy, UsizeBuddy};
 pub fn init() {
     // 托管空间 16 KiB
     const MEMORY_SIZE: usize = 16 << 10;
-    static mut MEMORY: [u8; MEMORY_SIZE] = [0u8; MEMORY_SIZE];
+    #[repr(align(4096))]
+    struct MemoryContainer([u8; MEMORY_SIZE]);
+    // static mut MEMORY: [u8; MEMORY_SIZE] = [0u8; MEMORY_SIZE];
+    static mut MEMORY: MemoryContainer = MemoryContainer([0u8; MEMORY_SIZE]);
     unsafe {
         HEAP.init(
             core::mem::size_of::<usize>().trailing_zeros() as _,
-            NonNull::new(MEMORY.as_mut_ptr()).unwrap(),
+            NonNull::new(MEMORY.0.as_mut_ptr()).unwrap(),
         );
-        HEAP.transfer(NonNull::new_unchecked(MEMORY.as_mut_ptr()), MEMORY.len());
+        HEAP.transfer(NonNull::new_unchecked(MEMORY.0.as_mut_ptr()), MEMORY.0.len());
     }
 }
 

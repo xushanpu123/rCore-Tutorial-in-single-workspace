@@ -8,8 +8,10 @@ use user_lib::{exec, fork, println, sched_yield, wait};
 #[no_mangle]
 fn main() -> i32 {
     println!("initproc!");
-    if fork() == 0 {
+    let forkret = fork();
+    if forkret == 0 {
         // exec("user_shell\0", &[core::ptr::null::<u8>()]);
+        println!("exec");
         exec("user_shell\0");
     } else {
         loop {
