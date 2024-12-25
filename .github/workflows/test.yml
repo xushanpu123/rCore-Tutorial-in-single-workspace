@@ -17,11 +17,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
     
-      - name: Verify installation
-        shell: bash
-        run: |
-          qemu-system-riscv64 --version
-          whereis qemu-system-riscv64
 
       - name: Build syscall
         uses: actions-rs/cargo@v1
