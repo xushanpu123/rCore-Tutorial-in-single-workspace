@@ -24,6 +24,7 @@ jobs:
         run: |
          rustup component add llvm-tools-preview
          export PATH="$HOME/.rustup/toolchains/$(rustup show active-toolchain)/bin:$PATH"
+         cargo install cargo-binutils
          pip install toml
          pip install python-liquid
          pip install termcolor
