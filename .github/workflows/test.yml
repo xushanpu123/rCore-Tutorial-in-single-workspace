@@ -32,6 +32,6 @@ jobs:
          pip install toml
          pip install python-liquid
          pip install termcolor
-         sudo apt update && sudo apt install -y qemu-system-misc qemu-system-arm qemu-system-x86_64
+         sudo apt update && sudo apt install -y qemu-system-misc qemu-system-arm qemu-system-x86
          ./run.py --ch 8 --arch x86_64 --release  qemu
          ./run.py --ch 8 --arch loongarch64 --release  qemu
