@@ -64,9 +64,15 @@ jobs:
          pip install python-liquid
          pip install termcolor
          sudo apt update && sudo apt install -y qemu-system-misc qemu-system-arm qemu-system-x86
-         ./run.py --ch 8 --arch loongarch64 --release  qemu  | tee output.log | while IFS= read -r line; do
-          echo "$line"
-          if [[ "$line" == *"Usertests passed!"* ]]; then
-              echo "Detected success message. Exiting with success."
-              exit 0
+         ./run.py --ch 8 --arch loongarch64 --release  qemu 
+         timeout 30s your_test_command | while IFS= read -r line; do
+         echo "$line"
+         if [[ "$line" == *"Usertests passed!"* ]]; then
+            echo "Detected success message. Exiting with success."
+            pkill -P $$ # Kill the test command
+            exit 0
+         fi
+         done
+         echo "Success message not detected. Exiting with failure."
+         exit 1
          
