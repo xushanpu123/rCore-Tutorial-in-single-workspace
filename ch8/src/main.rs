@@ -282,12 +282,15 @@ mod impls {
             let current = unsafe { PROCESSOR.get_current_proc().unwrap() };
             if fd == STDIN {
                 for _ in 0..count {
-                    if let Some(c) = DebugConsole::getchar() {
-                        let c = c as u8;
-                        let mut ptr = buf as *mut u8;
-                        unsafe {
-                            *ptr = c;
-                            ptr = ptr.add(1);
+                    loop {
+                        if let Some(c) = DebugConsole::getchar() {
+                            let c = c as u8;
+                            let mut ptr = buf as *mut u8;
+                            unsafe {
+                                *ptr = c;
+                                ptr = ptr.add(1);
+                            }
+                            break;
                         }
                     }
                 }
