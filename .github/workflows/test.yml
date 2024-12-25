@@ -23,6 +23,8 @@ jobs:
 
       - name: usertests
         run: 
+         pip install toml
+         pip install python-liquid 
          ./run.py --ch 8 --arch riscv64 --release  qemu
          ./run.py --ch 8 --arch aarch64 --release  qemu
          ./run.py --ch 8 --arch x86_64 --release  qemu
