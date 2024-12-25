@@ -7,6 +7,7 @@
 mod fs;
 mod process;
 mod processor;
+#[cfg_attr(not(any(target_arch = "riscv64", target_arch = "aarch64")), path = "ramdisk_block.rs")]
 mod virtio_block;
 
 #[macro_use]
@@ -156,7 +157,7 @@ pub fn task_entry() {
                             Id::EXIT => unsafe { PROCESSOR.make_current_exited(ret) },
                             _ => {
                                 let ctx = &mut PROCESSOR.get_current().unwrap().trap_cx;
-                                ctx[TrapFrameArgs::ARG0] = ret as _;
+                                ctx[TrapFrameArgs::RET] = ret as _;
                                 unsafe { PROCESSOR.make_current_suspend() };
                             }
                         },
@@ -186,9 +187,9 @@ fn panic(info: &core::panic::PanicInfo) -> ! {
     Instruction::shutdown();
 }
 
-pub const MMIO: &[(usize, usize)] = &[
-    (0x1000_1000, 0x00_1000), // Virtio Block in virt machine
-];
+// pub const MMIO: &[(usize, usize)] = &[
+//     (0x1000_1000, 0x00_1000), // Virtio Block in virt machine
+// ];
 
 /// 各种接口库的实现。
 mod impls {
@@ -336,7 +337,7 @@ mod impls {
             let mut child_proc = current.fork().unwrap();
             let pid = child_proc.pid;
             let context = &mut child_proc.trap_cx;
-            context[TrapFrameArgs::ARG0] = 0 as _;
+            context[TrapFrameArgs::RET] = 0 as _;
             unsafe {
                 PROCESSOR.add(pid, child_proc, current.pid);
             }

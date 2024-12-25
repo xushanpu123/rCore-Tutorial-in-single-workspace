@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../polyhal"
+		}
+	],
+	"settings": {
+		"rust-analyzer.cargo.target": "riscv64gc-unknown-none-elf",
+		"rust-analyzer.cargo.allTargets": false,
+		"rust-analyzer.check.allTargets": false,
+		"rust-analyzer.check.extraArgs": []
+	}
+}

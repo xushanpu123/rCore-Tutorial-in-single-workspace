@@ -18,6 +18,7 @@ kernel-vm = { path = "../kernel-vm" }
 syscall = { path = "../syscall", features = ["kernel"] }
 rcore-task-manage = { path = "../task-manage", features = ["proc"] }
 easy-fs = { path = "../easy-fs" }
+pci = { path = "../pci" }
 log = "0.4"
 
 [build-dependencies]

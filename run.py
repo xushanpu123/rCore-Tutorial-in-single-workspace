@@ -203,6 +203,7 @@ def build(args):
         command += ["--release"]
     if args.arch == "loongarch64":
         command += ["-Zbuild-std=core,alloc"]
+    env["TARGET_DIR"] = getTargetPath()
     res = subprocess.run(command, env=env)
     res.check_returncode()
 
@@ -247,7 +248,7 @@ def qemu(args):
 
     # command += ["-s", "-S"]
     
-    if chapter > 5:
+    if chapter > 5 and args.arch not in ["x86_64", "loongarch64"]:
         command += [
             "-drive",
             "file=%s/fs.img,if=none,format=raw,id=x0" % (getTargetPath()),

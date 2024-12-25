@@ -1,0 +1,11 @@
+[package]
+name = "pci"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+log = "0.4"
+polyhal = {git = "https://github.com/xushanpu123/polyhal.git",features = ["kcontext", "trap", "boot"]}
+virtio-drivers = "0.7.5"
