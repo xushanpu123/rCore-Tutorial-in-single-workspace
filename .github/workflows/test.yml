@@ -19,12 +19,15 @@ jobs:
           command: build
           args: --package syscall
 
+        uses: actions-rs/install@v0.1
+        with:
+          crate: cargo-binutils
+          version: latest
 
       - name: usertests
         run: |
          rustup component add llvm-tools-preview
          export PATH="$HOME/.rustup/toolchains/$(rustup show active-toolchain)/bin:$PATH"
-         cargo install cargo-binutils
          pip install toml
          pip install python-liquid
          pip install termcolor
