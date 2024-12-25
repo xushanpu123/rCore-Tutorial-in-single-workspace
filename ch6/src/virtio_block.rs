@@ -2,23 +2,27 @@ use alloc::{
     alloc::{alloc_zeroed, dealloc},
     sync::Arc,
 };
-use polyhal::consts::VIRT_ADDR_START;
 use core::{alloc::Layout, ptr::NonNull};
 use easy_fs::BlockDevice;
+use polyhal::consts::VIRT_ADDR_START;
 use spin::{Lazy, Mutex};
 use virtio_drivers::{Hal, VirtIOBlk, VirtIOHeader};
 
+#[cfg(target_arch = "riscv64")]
 const VIRTIO0: usize = VIRT_ADDR_START + 0x10001000;
+
+#[cfg(target_arch = "aarch64")]
+const VIRTIO0: usize = VIRT_ADDR_START + 0xa00_0000;
+
+
 
 pub static BLOCK_DEVICE: Lazy<Arc<dyn BlockDevice>> = Lazy::new(|| {
     Arc::new(unsafe {
-        VirtIOBlock(Mutex::new(
-            {
+        VirtIOBlock(Mutex::new({
             let v = VirtIOBlk::new(&mut *(VIRTIO0 as *mut VirtIOHeader)).unwrap();
             println!("create succes");
             v
-            }
-        ))
+        }))
     })
 });
 
@@ -44,12 +48,8 @@ struct VirtioHal;
 impl Hal for VirtioHal {
     fn dma_alloc(pages: usize) -> usize {
         // warn!("dma_alloc");
-        let paddr: usize = unsafe {
-            alloc_zeroed(Layout::from_size_align_unchecked(
-                pages << 12,
-                1 << 12,
-            )) as _
-        };
+        let paddr: usize =
+            unsafe { alloc_zeroed(Layout::from_size_align_unchecked(pages << 12, 1 << 12)) as _ };
         paddr - VIRT_ADDR_START
     }
 

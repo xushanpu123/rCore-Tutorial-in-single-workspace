@@ -15,6 +15,7 @@ From Date: 2024-12-23
     So fixed after align manually.
 
     Return ops is ctx[TrapFrameArgs::ARG0], correct is ctx[TrapFrameArgs::RET] 
+    Using syscall_ok instead ctx[TrapFrameArgs::SEPC], Some arch not need to update sepc manually.
 2. support Multi Architecture
 
 3. Support SMP(Symmetric Multi Processing)

@@ -5,6 +5,7 @@ mod user;
 extern crate clap;
 
 use clap::Parser;
+use fs_pack::easy_fs_pack;
 use once_cell::sync::Lazy;
 use os_xtask_utils::{BinUtil, Cargo, CommandExt, Qemu};
 use std::{
@@ -34,6 +35,7 @@ enum Commands {
     Make(BuildArgs),
     Asm(AsmArgs),
     Qemu(QemuArgs),
+    Pack(EasyFSPackArgs)
 }
 
 fn main() {
@@ -44,7 +46,19 @@ fn main() {
         }
         Asm(args) => args.dump(),
         Qemu(args) => args.run(),
+        Pack(easyfs) => {
+            println!("Easy fs pack: {:?}", easyfs);
+            let files: Vec<String> = easyfs.files.split(",").map(|x| x.to_string()).collect();
+
+            easy_fs_pack(&files, &easyfs.img_dir.unwrap_or(String::from("."))).unwrap();
+        }
     }
+}
+
+#[derive(Args, Default, Debug)]
+struct EasyFSPackArgs {
+    files: String,
+    img_dir: Option<String>
 }
 
 #[derive(Args, Default)]

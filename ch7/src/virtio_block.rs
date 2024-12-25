@@ -8,7 +8,12 @@ use easy_fs::BlockDevice;
 use spin::{Lazy, Mutex};
 use virtio_drivers::{Hal, VirtIOBlk, VirtIOHeader};
 
+#[cfg(target_arch = "riscv64")]
 const VIRTIO0: usize = VIRT_ADDR_START + 0x10001000;
+
+#[cfg(target_arch = "aarch64")]
+const VIRTIO0: usize = VIRT_ADDR_START + 0xa00_0000;
+
 
 pub static BLOCK_DEVICE: Lazy<Arc<dyn BlockDevice>> = Lazy::new(|| {
     Arc::new(unsafe {

@@ -144,7 +144,8 @@ pub fn task_entry() {
         EscapeReason::SysCall => {
             use syscall::{SyscallId as Id, SyscallResult as Ret};
             let ctx = &mut task.trap_cx;
-            ctx[TrapFrameArgs::SEPC] += 4;
+            // ctx[TrapFrameArgs::SEPC] += 4;
+            ctx.syscall_ok();
             let id: Id = ctx[TrapFrameArgs::SYSCALL].into();
             let args = ctx.args();
             let syscall_ret = syscall::handle(Caller { entity: 0, flow: 0 }, id, args);

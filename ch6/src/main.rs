@@ -147,7 +147,7 @@ pub fn task_entry() {
                 EscapeReason::SysCall => {
                     use syscall::{SyscallId as Id, SyscallResult as Ret};
                     let ctx = &mut PROCESSOR.get_current().unwrap().trap_cx;
-                    ctx[TrapFrameArgs::SEPC] += 4;
+                    ctx.syscall_ok();
                     // ctx.move_next();
                     let id: Id = ctx[TrapFrameArgs::SYSCALL].into();
                     let args = ctx.args();
@@ -260,12 +260,15 @@ mod impls {
             let current = unsafe { PROCESSOR.current().unwrap() };
             if fd == STDIN {
                 for _ in 0..count {
-                    if let Some(c) = DebugConsole::getchar() {
-                        let c = c as u8;
-                        let mut ptr = buf as *mut u8;
-                        unsafe {
-                            *ptr = c;
-                            ptr = ptr.add(1);
+                    loop {
+                        if let Some(c) = DebugConsole::getchar() {
+                            let c = c as u8;
+                            let mut ptr = buf as *mut u8;
+                            unsafe {
+                                *ptr = c;
+                                ptr = ptr.add(1);
+                            }
+                            break;
                         }
                     }
                 }

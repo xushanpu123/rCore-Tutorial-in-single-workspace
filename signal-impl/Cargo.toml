@@ -5,7 +5,7 @@ edition = "2021"
 authors = ["scPointer <jax01@foxmail.com>"]
 
 [dependencies]
-kernel-context = { path = "../kernel-context" }
+# kernel-context = { path = "../kernel-context" }
 signal = { path = "../signal" }
 polyhal = {git = "https://github.com/xushanpu123/polyhal.git",features = ["kcontext", "trap", "boot"]}
 log = "0.4"

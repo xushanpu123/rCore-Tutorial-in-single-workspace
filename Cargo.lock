@@ -668,7 +668,6 @@ dependencies = [
 name = "signal"
 version = "0.1.0"
 dependencies = [
- "kernel-context",
  "polyhal",
  "signal-defs",
 ]
@@ -684,7 +683,6 @@ dependencies = [
 name = "signal-impl"
 version = "0.1.0"
 dependencies = [
- "kernel-context",
  "log",
  "polyhal",
  "signal",

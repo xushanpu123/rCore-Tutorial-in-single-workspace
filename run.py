@@ -166,6 +166,11 @@ def buildUser(args):
     )
     with open(getTargetPath() + "/app.asm", "w+") as fp:
         fp.write(appAsm)
+    
+    if chapter >= 6:
+        command = ["cargo", "pack", ','.join(userConfig['cases']), getTargetPath()]
+        res = subprocess.run(command)
+        res.check_returncode()
 
 
 # Convert elf to binary, stripe all.
