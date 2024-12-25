@@ -7,6 +7,7 @@
 mod fs;
 mod process;
 mod processor;
+#[cfg_attr(not(any(target_arch = "riscv64", target_arch = "aarch64")), path = "ramdisk_block.rs")]
 mod virtio_block;
 
 #[macro_use]
@@ -174,7 +175,7 @@ pub fn task_entry() {
                         }
                         _ => {
                             let ctx = &mut task.trap_cx;
-                            ctx[TrapFrameArgs::ARG0] = ret as _;
+                            ctx[TrapFrameArgs::RET] = ret as _;
                             unsafe { PROCESSOR.make_current_suspend() };
                         }
                     },
@@ -360,7 +361,7 @@ mod impls {
             let pid = child_proc.pid;
             let tid = thread.tid;
             let context = &mut thread.trap_cx;
-            context[TrapFrameArgs::ARG0] = 0 as _;
+            context[TrapFrameArgs::RET] = 0 as _;
             unsafe {
                 println!("pid:{:?},tid:{:?}", pid, tid);
                 PROCESSOR.add_proc(pid, child_proc, current.pid);

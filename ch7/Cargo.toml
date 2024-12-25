@@ -9,6 +9,7 @@ virtio-drivers = { git = "https://github.com/rcore-os/virtio-drivers", rev = "4e
 polyhal = {git = "https://github.com/xushanpu123/polyhal.git",features = ["kcontext", "trap", "boot"]}
 xmas-elf = "0.8.0"
 spin = "0.9"
+log = "0.4"
 
 linker = { path = "../linker" }
 rcore-console = { path = "../console" }
