@@ -1,6 +1,10 @@
 ﻿﻿name: CI
 
-on: [push]
+on:
+  push:
+    branches: [ "v3" ]
+  pull_request:
+    branches: [ "v3" ]
 
 env:
   CARGO_TERM_COLOR: always
