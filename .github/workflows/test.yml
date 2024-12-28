@@ -15,14 +15,17 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
-      
-      - name: Install dependencies
+
+      - name: Install system dependencies
         run: |
-          sudo apt-get update && sudo apt-get install -y ninja-build libslirp-dev libglib2.0-dev \
+          sudo apt-get update && sudo apt-get install -y \
+          ninja-build libslirp-dev libglib2.0-dev \
           qemu-system-misc qemu-system-arm qemu-system-x86 python3-pip
-          rustup component add llvm-tools-preview
-          cargo install cargo-binutils --version 0.3.0
-          pip install toml python-liquid termcolor
+
+      - name: Install Python dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip3 install toml python-liquid termcolor
 
       - name: Cache QEMU
         id: cache-qemu
