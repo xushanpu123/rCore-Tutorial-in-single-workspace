@@ -5,6 +5,6 @@ edition = "2021"
 authors = ["YdrMaster <ydrml@hotmail.com>"]
 
 [dependencies]
-rcore-console = { path = "../console" }
-syscall = { path = "../syscall", features = ["user"] }
+rcore-console = { git = "https://github.com/crates-rcore-in-single-workspace/console.git" }
+syscall = { git = "https://github.com/crates-rcore-in-single-workspace/syscall.git", features = ["user"] }
 customizable-buddy = "0.0.2"

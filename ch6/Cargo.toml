@@ -10,16 +10,16 @@ polyhal = {git = "https://github.com/xushanpu123/polyhal.git",features = ["kcont
 xmas-elf = "0.8.0"
 spin = "0.9"
 
-linker = { path = "../linker" }
-rcore-console = { path = "../console" }
-# kernel-context = { path = "../kernel-context", features = ["foreign"] }
-kernel-alloc = { path = "../kernel-alloc" }
-kernel-vm = { path = "../kernel-vm" }
-syscall = { path = "../syscall", features = ["kernel"] }
-rcore-task-manage = { path = "../task-manage", features = ["proc"] }
-easy-fs = { path = "../easy-fs" }
-pci = { path = "../pci" }
+linker = { git = "https://github.com/crates-rcore-in-single-workspace/linker.git" }
+rcore-console = { git = "https://github.com/crates-rcore-in-single-workspace/console.git" }
+# kernel-context = { git = "https://github.com/crates-rcore-in-single-workspace/kernel-context.git", features = ["foreign"] }
+kernel-alloc = { git = "https://github.com/crates-rcore-in-single-workspace/kernel-alloc.git" }
+kernel-vm = { git = "https://github.com/crates-rcore-in-single-workspace/kernel-vm.git" }
+syscall = { git = "https://github.com/crates-rcore-in-single-workspace/syscall.git", features = ["kernel"] }
+rcore-task-manage = { git = "https://github.com/crates-rcore-in-single-workspace/task-manage.git", features = ["proc"] }
+easy-fs = { git = "https://github.com/crates-rcore-in-single-workspace/easy-fs.git" }
+pci = { git = "https://github.com/crates-rcore-in-single-workspace/pci.git" }
 log = "0.4"
 
 [build-dependencies]
-linker = { path = "../linker" }
+linker = { git = "https://github.com/crates-rcore-in-single-workspace/linker.git" }

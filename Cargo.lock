@@ -142,7 +142,7 @@ dependencies = [
 name = "ch1-lab"
 version = "0.0.1"
 dependencies = [
- "rcore-console",
+ "rcore-console 0.0.0 (git+https://github.com/crates-rcore-l-in-single-workspace/console.git)",
  "sbi-rt",
 ]
 
@@ -155,7 +155,7 @@ dependencies = [
  "linker",
  "log",
  "polyhal",
- "rcore-console",
+ "rcore-console 0.0.0 (git+https://github.com/crates-rcore-in-single-workspace/console.git)",
  "syscall",
 ]
 
@@ -168,7 +168,7 @@ dependencies = [
  "linker",
  "log",
  "polyhal",
- "rcore-console",
+ "rcore-console 0.0.0 (git+https://github.com/crates-rcore-in-single-workspace/console.git)",
  "syscall",
 ]
 
@@ -181,7 +181,7 @@ dependencies = [
  "lazy_static",
  "linker",
  "polyhal",
- "rcore-console",
+ "rcore-console 0.0.0 (git+https://github.com/crates-rcore-in-single-workspace/console.git)",
  "syscall",
  "xmas-elf",
 ]
@@ -194,7 +194,7 @@ dependencies = [
  "kernel-vm",
  "linker",
  "polyhal",
- "rcore-console",
+ "rcore-console 0.0.0 (git+https://github.com/crates-rcore-in-single-workspace/console.git)",
  "rcore-task-manage",
  "spin 0.9.8",
  "syscall",
@@ -212,7 +212,7 @@ dependencies = [
  "log",
  "pci",
  "polyhal",
- "rcore-console",
+ "rcore-console 0.0.0 (git+https://github.com/crates-rcore-in-single-workspace/console.git)",
  "rcore-task-manage",
  "spin 0.9.8",
  "syscall",
@@ -230,7 +230,7 @@ dependencies = [
  "linker",
  "log",
  "polyhal",
- "rcore-console",
+ "rcore-console 0.0.0 (git+https://github.com/crates-rcore-in-single-workspace/console.git)",
  "rcore-task-manage",
  "signal",
  "signal-impl",
@@ -250,7 +250,7 @@ dependencies = [
  "linker",
  "log",
  "polyhal",
- "rcore-console",
+ "rcore-console 0.0.0 (git+https://github.com/crates-rcore-in-single-workspace/console.git)",
  "rcore-task-manage",
  "signal",
  "signal-impl",
@@ -322,6 +322,7 @@ checksum = "eace6325758817ca21d4f27c2ec7d307bcac92f468ef5e0eaa2573787402a62e"
 [[package]]
 name = "easy-fs"
 version = "0.1.0"
+source = "git+https://github.com/crates-rcore-in-single-workspace/easy-fs.git#6c4ec7a6cd2152ff98c526e32770032f4d23ba0e"
 dependencies = [
  "bitflags 1.3.2",
  "spin 0.7.1",
@@ -387,21 +388,16 @@ checksum = "7943c866cc5cd64cbc25b2e01621d07fa8eb2a1a23160ee81ce38704e97b8ecf"
 [[package]]
 name = "kernel-alloc"
 version = "0.1.0"
+source = "git+https://github.com/crates-rcore-in-single-workspace/kernel-alloc.git#f9b14a18be5410a96ea57b227c6121036d8dce0e"
 dependencies = [
  "buddy_system_allocator",
  "log",
 ]
 
 [[package]]
-name = "kernel-context"
-version = "0.1.0"
-dependencies = [
- "spin 0.9.8",
-]
-
-[[package]]
 name = "kernel-vm"
 version = "0.1.0"
+source = "git+https://github.com/crates-rcore-in-single-workspace/kernel-vm.git#b3ee4a5ca3313306c6380a80e27c587799f750ae"
 dependencies = [
  "bitflags 1.3.2",
  "buddy_system_allocator",
@@ -409,7 +405,7 @@ dependencies = [
  "lazy_static",
  "log",
  "polyhal",
- "rcore-console",
+ "rcore-console 0.0.0 (git+https://github.com/crates-rcore-in-single-workspace/console.git)",
  "xmas-elf",
 ]
 
@@ -425,8 +421,9 @@ dependencies = [
 [[package]]
 name = "linker"
 version = "0.0.1"
+source = "git+https://github.com/crates-rcore-in-single-workspace/linker.git#a2a3df3fb762165b76acc73fa657cbcd1b4788ec"
 dependencies = [
- "rcore-console",
+ "rcore-console 0.0.0 (git+https://github.com/crates-rcore-in-single-workspace/console.git)",
 ]
 
 [[package]]
@@ -499,6 +496,7 @@ checksum = "57c0d7b74b563b49d38dae00a0c37d4d6de9b432382b2892f0574ddcae73fd0a"
 [[package]]
 name = "pci"
 version = "0.1.0"
+source = "git+https://github.com/crates-rcore-in-single-workspace/pci.git#0f56b7852d37f9004cbcb9622e260104954f9449"
 dependencies = [
  "log",
  "polyhal",
@@ -580,6 +578,16 @@ dependencies = [
 [[package]]
 name = "rcore-console"
 version = "0.0.0"
+source = "git+https://github.com/crates-rcore-in-single-workspace/console.git#db66cf951648fea11f7c7b2f9f562db7895ae3ff"
+dependencies = [
+ "log",
+ "spin 0.9.8",
+]
+
+[[package]]
+name = "rcore-console"
+version = "0.0.0"
+source = "git+https://github.com/crates-rcore-l-in-single-workspace/console.git#db66cf951648fea11f7c7b2f9f562db7895ae3ff"
 dependencies = [
  "log",
  "spin 0.9.8",
@@ -588,6 +596,7 @@ dependencies = [
 [[package]]
 name = "rcore-task-manage"
 version = "0.0.0"
+source = "git+https://github.com/crates-rcore-in-single-workspace/task-manage.git#7c30786c2609a217e6f622b5e08af55daafe4a89"
 
 [[package]]
 name = "riscv"
@@ -661,6 +670,7 @@ dependencies = [
 [[package]]
 name = "signal"
 version = "0.1.0"
+source = "git+https://github.com/crates-rcore-in-single-workspace/signal.git#a1c7382c62fba0703aba43b08fcaa36a8f4f3754"
 dependencies = [
  "polyhal",
  "signal-defs",
@@ -669,6 +679,7 @@ dependencies = [
 [[package]]
 name = "signal-defs"
 version = "0.1.0"
+source = "git+https://github.com/crates-rcore-in-single-workspace/signal-defs.git#9d3589373010c7a2b1f47fde7e52450faa7f4738"
 dependencies = [
  "numeric-enum-macro",
 ]
@@ -676,6 +687,7 @@ dependencies = [
 [[package]]
 name = "signal-impl"
 version = "0.1.0"
+source = "git+https://github.com/crates-rcore-in-single-workspace/signal-impl.git#cb8137222235a9bc230f2d8aafc0cb71a6caaa25"
 dependencies = [
  "log",
  "polyhal",
@@ -723,6 +735,7 @@ dependencies = [
 [[package]]
 name = "sync"
 version = "0.1.0"
+source = "git+https://github.com/crates-rcore-in-single-workspace/sync.git#51cd9e51d21d9cb21c8310f25682fe52249efeea"
 dependencies = [
  "polyhal",
  "rcore-task-manage",
@@ -732,6 +745,7 @@ dependencies = [
 [[package]]
 name = "syscall"
 version = "0.1.0"
+source = "git+https://github.com/crates-rcore-in-single-workspace/syscall.git#35b522e1d477408bd0e32591e36cb2979c346227"
 dependencies = [
  "bitflags 1.3.2",
  "signal-defs",
@@ -789,7 +803,7 @@ name = "user_lib"
 version = "0.0.1"
 dependencies = [
  "customizable-buddy",
- "rcore-console",
+ "rcore-console 0.0.0 (git+https://github.com/crates-rcore-in-single-workspace/console.git)",
  "syscall",
 ]
 

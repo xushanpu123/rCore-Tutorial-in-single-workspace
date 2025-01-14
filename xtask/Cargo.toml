@@ -14,4 +14,4 @@ once_cell = "1.17"
 serde = "1.0"
 serde_derive = "1.0"
 toml = "0.7"
-easy-fs = { path = "../easy-fs" }
+easy-fs = { git = "https://github.com/crates-rcore-in-single-workspace/easy-fs.git" }
